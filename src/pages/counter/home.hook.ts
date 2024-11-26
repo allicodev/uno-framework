@@ -1,4 +1,4 @@
-import { useAppSelector, useAppDispatch } from "@/core/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/core/redux";
 import { increment, decrement } from "@/core/redux/slice/counter.slice";
 
 const useHome = () => {
