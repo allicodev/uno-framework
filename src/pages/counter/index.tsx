@@ -1,2 +1,4 @@
 // @ auto generated. do not edit ‼️
-export { default } from "./home";
+import Home from "./Home";
+
+export default Home;

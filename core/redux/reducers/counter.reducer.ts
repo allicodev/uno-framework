@@ -1,5 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { CounterState } from "@/core/redux/redux.types";
+import { CounterState } from "@/core/redux/types";
 
 const reducer = {
   increment: (state: CounterState) => {
