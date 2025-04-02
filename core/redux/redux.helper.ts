@@ -15,7 +15,7 @@ interface Params {
   forceFetch?: boolean;
 }
 
-const shouldFetch = (params: Params) => {
+const shouldFetch = (params: Params): boolean => {
   if (params?.forceFetch ?? false) return true;
   const { state, dispatch, id, reduxKey, ttl: ttlParams } = params;
   const resources = _.cloneDeep(state[reduxKey] || {});
@@ -23,14 +23,17 @@ const shouldFetch = (params: Params) => {
   const checkOptions = Object.keys(resources?.apiOptions ?? {}).find(
     (_id: string) => _id == id
   );
-  // && resources.apiOptions[id].isLoaded
+
   if (!_.isNil(checkOptions)) {
     const { isFetching, isLoaded, ttl, dateLastLoaded } =
       resources.apiOptions[id];
     if (isFetching) return false;
 
-    if (!_.isNil(dateLastLoaded))
+    if (!_.isNil(dateLastLoaded)) {
       return dayjs().diff(dateLastLoaded, "second") >= ttl;
+    }
+    // If dateLastLoaded is nil, we should fetch
+    return true;
   } else {
     dispatch({
       type: `${reduxKey}/newOption`,
@@ -46,9 +49,10 @@ const withDynamicOptions = <State>(
 ): Reducer<State> => {
   return (state: any, action: { type: string; payload?: any }): State => {
     const { id, ttl } = action?.payload ?? {};
+
     switch (action.type) {
       case `${reduxKey}/newOption`: {
-        state = {
+        return {
           ...state,
           apiOptions: {
             ...state.apiOptions,
@@ -60,15 +64,10 @@ const withDynamicOptions = <State>(
             },
           },
         };
-
-        return {
-          ...state,
-          // Update state based on action payload
-        };
       }
 
       case `${reduxKey}/updateOption`: {
-        state = {
+        return {
           ...state,
           apiOptions: {
             ...state.apiOptions,
@@ -77,10 +76,6 @@ const withDynamicOptions = <State>(
               ..._.omit(action.payload, "id"),
             },
           },
-        };
-        return {
-          ...state,
-          // Update state based on action payload
         };
       }
       default:
