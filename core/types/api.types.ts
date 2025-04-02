@@ -16,10 +16,12 @@ export interface ApiGetProps {
   endpoint: string;
   query?: Record<any, any>;
   publicRoute?: boolean;
+  token?: string | null;
 }
 
 export interface ApiPostProps {
   endpoint: string;
   payload?: Record<any, any>;
   publicRoute?: boolean;
+  token?: string | null;
 }

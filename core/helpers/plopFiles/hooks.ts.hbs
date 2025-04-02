@@ -1,0 +1,28 @@
+import { useState, useEffect } from 'react';
+import { {{pascalCase name}}Props, {{pascalCase name}}State, {{pascalCase name}}Handlers } from './{{camelCase name}}.types';
+
+export const use{{pascalCase name}} = (props: {{pascalCase name}}Props) => {
+  // Initialize state
+  const [state, setState] = useState<{{pascalCase name}}State>({
+    // Add your state properties here
+    isLoading: false,
+  });
+
+  // Define handlers
+  const handlers: {{pascalCase name}}Handlers = {
+    // Add your handlers here
+    handleSomething: () => {
+      // Implementation
+    },
+  };
+
+  // Side effects
+  useEffect(() => {
+    // Add your side effects here
+  }, []);
+
+  return {
+    state,
+    handlers,
+  };
+};

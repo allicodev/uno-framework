@@ -44,7 +44,7 @@ const withDynamicOptions = <State>(
   baseReducer: Reducer<State>,
   reduxKey: string
 ): Reducer<State> => {
-  return (state: any, action: PayloadAction<any>): State => {
+  return (state: any, action: { type: string; payload?: any }): State => {
     const { id, ttl } = action?.payload ?? {};
     switch (action.type) {
       case `${reduxKey}/newOption`: {

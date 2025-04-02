@@ -1,0 +1,17 @@
+import React from 'react';
+import { use{{pascalCase name}} } from './{{camelCase name}}.hooks';
+import './{{camelCase name}}.styles.scss';
+import { {{pascalCase name}}Props } from './{{camelCase name}}.types';
+
+const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = (props) => {
+  const { state, handlers } = use{{pascalCase name}}(props);
+
+  return (
+    <div className="{{kebabCase name}}-container">
+      <h1>{{pascalCase name}}</h1>
+      {/* Your content goes here */}
+    </div>
+  );
+};
+
+export default {{pascalCase name}};
