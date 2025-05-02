@@ -1,6 +1,6 @@
 import _ from "lodash";
 import dayjs from "dayjs";
-import { PayloadAction, Reducer } from "@reduxjs/toolkit";
+import { Reducer } from "@reduxjs/toolkit";
 
 // reducers
 
@@ -27,7 +27,8 @@ const shouldFetch = (params: Params): boolean => {
   if (!_.isNil(checkOptions)) {
     const { isFetching, isLoaded, ttl, dateLastLoaded } =
       resources.apiOptions[id];
-    if (isFetching) return false;
+
+    if (isFetching || isLoaded) return false;
 
     if (!_.isNil(dateLastLoaded)) {
       return dayjs().diff(dateLastLoaded, "second") >= ttl;
@@ -84,10 +85,4 @@ const withDynamicOptions = <State>(
   };
 };
 
-const fetchSuccessPayload = () => ({
-  dateLastLoaded: new Date().toISOString(),
-  isLoaded: true,
-  isFetching: false,
-});
-
-export { shouldFetch, withDynamicOptions, fetchSuccessPayload };
+export { shouldFetch, withDynamicOptions };

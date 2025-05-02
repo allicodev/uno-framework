@@ -1,3 +1,5 @@
+import { ApiOption } from "../redux/types";
+
 export enum Status {
   idle = "IDLE",
   loading = "LOADING",
@@ -6,7 +8,7 @@ export enum Status {
 }
 
 export interface BaseReduxState {
-  apiOptions?: { [id: string]: ApiOptions };
+  apiOptions?: { [code: string]: ApiOption };
   status: Status;
 }
 
@@ -23,11 +25,4 @@ export interface BaseReduxService {
   id?: "all" | string;
   optimistic?: boolean;
   callback?: (...args: any[]) => void;
-}
-
-interface ApiOptions {
-  isFetching: boolean;
-  isLoaded: boolean;
-  ttl: number;
-  dateLastLoaded: Date;
 }

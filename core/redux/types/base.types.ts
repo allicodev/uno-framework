@@ -8,17 +8,16 @@ interface ReduxBaseType {
   };
 }
 
-interface ApiOption {
+interface ApiOption extends Meta {
   isLoaded: boolean;
-  isFetching: false;
+  isFetching: boolean;
   ttl: number;
-  dateLastLoaded: Date;
+  dateLastLoaded: string;
 }
 
 interface Meta {
   page?: number;
-  total: number;
-  createdLast: Date;
+  total?: number;
 }
 
-export type { ReduxBaseType };
+export type { ReduxBaseType, ApiOption };

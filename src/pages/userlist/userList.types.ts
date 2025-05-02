@@ -1,4 +1,4 @@
-import { User } from "@/core/providers/service/users.service";
+import { User } from "@/core/types";
 
 export interface UserListProps {
   // Component props
@@ -14,8 +14,4 @@ export interface UserListState {
   total: number;
 }
 
-export interface UserListHandlers {
-  handleRefresh: () => void;
-  handlePageChange: (page: number) => void;
-  handleUserSelect: (user: User) => void;
-}
+export interface UserListHandlers {}

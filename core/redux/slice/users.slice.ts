@@ -5,13 +5,7 @@ import { usersReducers } from "../reducers";
 
 const initialState: UsersState = {
   data: [],
-  selectedUser: null,
   apiOptions: {},
-  meta: {
-    total: 0,
-    page: 1,
-    limit: 10,
-  },
 };
 
 const usersSlice = createSlice({
@@ -23,12 +17,9 @@ const usersSlice = createSlice({
 // Export actions
 export const {
   setUsers,
-  setSelectedUser,
-  clearSelectedUser,
   addUser,
   updateUser,
   removeUser,
-  setUsersMeta,
   startLoading,
   successLoading,
   failLoading,

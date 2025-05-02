@@ -15,20 +15,26 @@ abstract class API {
     // Use provided token or get from localStorage
     const authToken = token || getToken();
 
+    // // ! temporary commented
+    // if (!publicRoute && !authToken)
+    //   return {
+    //     success: false,
+    //     code: 500,
+    //     message: "Token is invalid",
+    //   };
+
     const request = await axios.get(
       `${ApiConfig.getBaseUrl(process.env.NEXT_IS_PROD == "true")}${endpoint}`,
       {
         params: query,
         headers: {
           "Content-Type": "application/json",
-          ...(!publicRoute && authToken
-            ? { Authorization: `Bearer ${authToken}` }
-            : {}),
+          ...(!publicRoute ? { Authorization: `Bearer ${authToken}` } : {}),
         },
       }
     );
 
-    if (request.data.success)
+    if ((request?.data as ExtendedResponse<T>)?.success)
       return {
         success: true,
         code: request?.status || 200,
@@ -51,19 +57,24 @@ abstract class API {
     // Use provided token or get from localStorage
     const authToken = token || getToken();
 
+    if (!publicRoute && !authToken)
+      return {
+        success: false,
+        code: 500,
+        message: "Token is invalid",
+      };
+
     const request = await axios.post(
       `${ApiConfig.getBaseUrl(process.env.NEXT_IS_PROD == "true")}${endpoint}`,
       payload,
       {
         headers: {
           "Content-Type": "application/json",
-          ...(!publicRoute && authToken
-            ? { Authorization: `Bearer ${authToken}` }
-            : {}),
+          ...(!publicRoute ? { Authorization: `Bearer ${authToken}` } : {}),
         },
       }
     );
-    if (request.data.success)
+    if ((request?.data as ExtendedResponse<T>)?.success)
       return {
         success: true,
         code: request.status,
@@ -71,8 +82,9 @@ abstract class API {
       };
     else
       return {
-        ...request.data,
         success: false,
+        code: 500,
+        message: "There is an error in the Server.",
       };
   }
 }
