@@ -8,8 +8,8 @@ import {
   failLoading,
 } from "../slice/users.slice";
 import { shouldFetch } from "../redux.helper";
-import { RootState } from "../store";
 import { getToken } from "@/core/utils/token.utils";
+import { RootState } from "..";
 
 const reduxKey = "users";
 
@@ -21,18 +21,18 @@ export const fetchUsers = createAsyncThunk(
       page = 1,
       limit = 10,
       forceFetch = false,
-      cb = false,
+      callback = false,
     }: {
       page?: number;
       limit?: number;
       forceFetch?: boolean;
-      cb?: Function | boolean | null;
+      callback?: Function | boolean | null;
     },
-    { dispatch, getState }
+    { dispatch, getState, requestId }
   ) => {
     // Use provided token or get from localStorage
     const state = getState() as RootState;
-    const id = `users_page_${page}_limit_${limit}`;
+    const id = requestId;
 
     // Check if we should fetch the data or use cached data
     if (
@@ -49,7 +49,6 @@ export const fetchUsers = createAsyncThunk(
     }
 
     try {
-      dispatch(startLoading({ id }));
       const response = await UsersService.getUsers(page, limit);
 
       if (response.success && response.data) {
@@ -63,16 +62,17 @@ export const fetchUsers = createAsyncThunk(
         };
         dispatch(setUsers(payload));
 
-        typeof cb == "function" && cb(true, response.data);
+        typeof callback == "function" && callback(true, response.data);
       } else {
-        typeof cb == "function" &&
-          cb(false, response.message || "Failed to fetch users");
+        typeof callback == "function" &&
+          callback(false, response.message || "Failed to fetch users");
       }
 
       return response;
     } catch (error) {
       dispatch(failLoading({ id }));
-      typeof cb == "function" && cb(false, error || "Failed to fetch users");
+      typeof callback == "function" &&
+        callback(false, error || "Failed to fetch users");
     }
   }
 );

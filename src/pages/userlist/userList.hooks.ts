@@ -4,13 +4,8 @@ import {
   UserListState,
   UserListHandlers,
 } from "./userList.types";
-import { RootState } from "@/core/redux/store";
-import { fetchUsers } from "@/core/redux/thunk/users.thunk";
-import { useAppDispatch, useAppSelector } from "@/core/redux";
-import { safeIsAuthenticated } from "@/core/utils/token.utils";
-
-const useDispatch = useAppDispatch;
-const useSelector = useAppSelector;
+import { UserThunk } from "@/core/redux/thunk";
+import { RootState, useDispatch, useSelector } from "@/core/redux";
 
 export const useUserList = (props: UserListProps) => {
   const dispatch = useDispatch();
@@ -30,7 +25,7 @@ export const useUserList = (props: UserListProps) => {
 
   useEffect(() => {
     dispatch(
-      fetchUsers({
+      UserThunk.fetchUsers({
         page: 1,
         limit: 10,
       })
