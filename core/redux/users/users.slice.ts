@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UsersState } from "../types/users.types";
 import { withDynamicOptions } from "../redux.helper";
-import { usersReducers } from "../reducers";
+import usersReducers from "./users.reducers";
 
 const initialState: UsersState = {
   data: [],

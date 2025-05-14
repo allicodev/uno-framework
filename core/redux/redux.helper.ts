@@ -17,7 +17,7 @@ interface Params {
 
 const shouldFetch = (params: Params): boolean => {
   if (params?.forceFetch ?? false) return true;
-  const { state, dispatch, id, reduxKey, ttl: ttlParams } = params;
+  const { state, dispatch, id, reduxKey, ttl = 300 } = params;
   const resources = _.cloneDeep(state[reduxKey] || {});
 
   const checkOptions = (resources?.apiOptions ?? {})[id] ?? null;
@@ -42,14 +42,14 @@ const shouldFetch = (params: Params): boolean => {
     if (isFetching || isLoaded) return false;
 
     if (!_.isNil(dateLastLoaded)) {
-      return dayjs().diff(dateLastLoaded, "second") >= ttl;
+      return dayjs().diff(dayjs(dateLastLoaded), "second") >= ttl;
     }
     // If dateLastLoaded is nil, we should fetch
     return true;
   } else {
     dispatch({
       type: `${reduxKey}/newOption`,
-      payload: { id, ttl: ttlParams },
+      payload: { id, ttl },
     });
     return true;
   }

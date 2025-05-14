@@ -1,0 +1,42 @@
+import _ from "lodash";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { {{pascalCase name}}State, {{pascalCase name}} } from "../types/{{camelCase name}}.types";
+
+// import your interface here after adding your interface on the redux index
+
+// Reducer functions for {{camelCase name}}
+export const set{{pascalCase name}} = (state: {{pascalCase name}}State, action: PayloadAction<any>) => {
+  const { data, id } = action.payload ?? {};
+  state.data = data;
+  state.apiOptions[id] = {
+    ...(state.apiOptions[id] || {}),
+    ..._.omit(action.payload, ["id", "data"]),
+    dateLastLoaded: new Date().toISOString(),
+  };
+};
+
+export const add{{pascalCase name}} = (state: {{pascalCase name}}State, action: PayloadAction<{{pascalCase name}}>) => {
+  state.data.push(action.payload);
+};
+
+export const update{{pascalCase name}} = (state: {{pascalCase name}}State, action: PayloadAction<{{pascalCase name}}>) => {
+  const index = (state.data || []).findIndex(
+    (item) => item.id === action.payload.id
+  );
+  if (index !== -1)
+    state.data[index] = { ...state.data[index], ...action.payload };
+};
+
+export const remove{{pascalCase name}} = (
+  state: {{pascalCase name}}State,
+  action: PayloadAction<{ id: string }>
+) => {
+  const index = (state.data || []).findIndex(
+    (item) => item.id === action.payload.id
+  );
+  if (index !== -1) state.data.splice(index, 1);
+};
+
+// API options caching reducers
+export const startLoading = (
+  state: {{pascalCase name}}State,

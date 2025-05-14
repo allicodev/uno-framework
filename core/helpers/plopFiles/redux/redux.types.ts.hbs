@@ -1,0 +1,16 @@
+import { ApiOption } from "@/core/types";
+
+interface {{pascalCase name}} {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface {{pascalCase name}}State {
+  data: {{pascalCase name}}[];
+  apiOptions: {
+    [key: string]: ApiOption;
+  };
+}
+
+export type { {{pascalCase name}}State, {{pascalCase name}} };

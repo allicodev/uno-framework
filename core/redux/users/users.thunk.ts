@@ -1,79 +1,72 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import UsersService from "@/core/providers/service/users.service";
-import {
-  setUsers,
-  addUser,
-  updateUser,
-  startLoading,
-  failLoading,
-} from "../slice/users.slice";
+import { setUsers, failLoading } from "./users.slice";
 import { shouldFetch } from "../redux.helper";
-import { getToken } from "@/core/utils/token.utils";
 import { RootState } from "..";
+
 
 const reduxKey = "users";
 
+interface FetchUserParams {
+  page?: number;
+  limit?: number;
+  forceFetch?: boolean;
+  callback?: Function | boolean | null;
+}
+
 // Async thunk for fetching users
-export const fetchUsers = createAsyncThunk(
-  "users/fetchUsers",
-  async (
-    {
+const fetchUsers = createAsyncThunk(
+  `${reduxKey}/fetchUsers`,
+  async (params: FetchUserParams, thunkApi) => {
+    const {
       page = 1,
       limit = 10,
       forceFetch = false,
       callback = false,
-    }: {
-      page?: number;
-      limit?: number;
-      forceFetch?: boolean;
-      callback?: Function | boolean | null;
-    },
-    { dispatch, getState, requestId }
-  ) => {
-    // Use provided token or get from localStorage
-    const state = getState() as RootState;
+    } = params ?? {};
+
+    const { dispatch, getState, requestId } = thunkApi ?? {};
     const id = requestId;
 
+    const resourceParams = {
+      id,
+      state: getState() as RootState,
+      dispatch,
+      reduxKey,
+      forceFetch,
+    };
+
     // Check if we should fetch the data or use cached data
-    if (
-      !shouldFetch({
-        id,
-        state,
-        dispatch,
-        reduxKey,
-        ttl: 300, // 5 minutes cache
-        forceFetch,
-      })
-    ) {
-      return;
-    }
+    if (shouldFetch(resourceParams)) {
+      try {
+        const response = await UsersService.getUsers(page, limit);
 
-    try {
-      const response = await UsersService.getUsers(page, limit);
+        if (response.success && response.data) {
+          const payload = {
+            id,
+            page,
+            data: response.data,
+            total: response.data.length,
+            isFetching: false,
+            isLoaded: true,
+          };
+          dispatch(setUsers(payload));
 
-      if (response.success && response.data) {
-        const payload = {
-          id,
-          page,
-          data: response.data,
-          total: response.data.length,
-          isFetching: false,
-          isLoaded: true,
-        };
-        dispatch(setUsers(payload));
+          typeof callback == "function" && callback(true, response.data);
+        } else {
+          typeof callback == "function" &&
+            callback(false, response.message || "Failed to fetch users");
+        }
 
-        typeof callback == "function" && callback(true, response.data);
-      } else {
+        return response;
+      } catch (error) {
+        dispatch(failLoading({ id }));
         typeof callback == "function" &&
-          callback(false, response.message || "Failed to fetch users");
+          callback(false, error || "Failed to fetch users");
       }
-
-      return response;
-    } catch (error) {
-      dispatch(failLoading({ id }));
-      typeof callback == "function" &&
-        callback(false, error || "Failed to fetch users");
     }
+
+    return;
   }
 );
 
@@ -173,3 +166,7 @@ export const fetchUsers = createAsyncThunk(
 //     }
 //   }
 // );
+
+export default {
+  fetchUsers,
+};

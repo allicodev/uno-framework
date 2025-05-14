@@ -1,4 +1,14 @@
-import { ApiOption, User } from "@/core/types";
+import { ApiOption } from "@/core/types";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  role?: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface UsersState {
   data: User[];
@@ -7,4 +17,4 @@ interface UsersState {
   };
 }
 
-export type { UsersState };
+export type { UsersState, User };

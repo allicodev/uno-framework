@@ -1,8 +1,7 @@
 import _ from "lodash";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { UsersState } from "../types/users.types";
-import { User } from "@/core/types";
+import { UsersState, User } from "../types/users.types";
 
 // Users reducer functions
 export const setUsers = (state: UsersState, action: PayloadAction<any>) => {
@@ -23,7 +22,8 @@ export const updateUser = (state: UsersState, action: PayloadAction<User>) => {
   const index = (state.data || []).findIndex(
     (user) => user.id === action.payload.id
   );
-  if (index !== -1) state.data[index] = action.payload;
+  if (index !== -1)
+    state.data[index] = { ...state.data[index], ...action.payload };
 };
 
 export const removeUser = (
@@ -47,6 +47,21 @@ export const startLoading = (
   }
 };
 
+export const failLoading = (
+  state: UsersState,
+  action: PayloadAction<{ id: string }>
+) => {
+  const { id } = action.payload;
+  if (state.apiOptions[id]) {
+    state.apiOptions[id] = {
+      ...state.apiOptions[id],
+      isFetching: false,
+      isLoaded: true,
+      dateLastLoaded: new Date().toISOString(),
+    };
+  }
+};
+
 export const successLoading = (
   state: UsersState,
   action: PayloadAction<{ id: string }>
@@ -62,17 +77,12 @@ export const successLoading = (
   }
 };
 
-export const failLoading = (
-  state: UsersState,
-  action: PayloadAction<{ id: string }>
-) => {
-  const { id } = action.payload;
-  if (state.apiOptions[id]) {
-    state.apiOptions[id] = {
-      ...state.apiOptions[id],
-      isFetching: false,
-      isLoaded: true,
-      dateLastLoaded: new Date().toISOString(),
-    };
-  }
+export default {
+  setUsers,
+  addUser,
+  updateUser,
+  removeUser,
+  startLoading,
+  failLoading,
+  successLoading,
 };
