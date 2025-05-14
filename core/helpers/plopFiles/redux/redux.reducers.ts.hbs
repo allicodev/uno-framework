@@ -37,6 +37,52 @@ export const remove{{pascalCase name}} = (
   if (index !== -1) state.data.splice(index, 1);
 };
 
-// API options caching reducers
 export const startLoading = (
   state: {{pascalCase name}}State,
+  action: PayloadAction<{ id: string }>
+) => {
+  const { id } = action.payload;
+  if (state.apiOptions[id]) {
+    state.apiOptions[id].isFetching = true;
+  }
+};
+
+export const failLoading = (
+  state: {{pascalCase name}}State,
+  action: PayloadAction<{ id: string }>
+) => {
+  const { id } = action.payload;
+  if (state.apiOptions[id]) {
+    state.apiOptions[id] = {
+      ...state.apiOptions[id],
+      isFetching: false,
+      isLoaded: true,
+      dateLastLoaded: new Date().toISOString(),
+    };
+  }
+};
+
+export const successLoading = (
+  state: {{pascalCase name}}State,
+  action: PayloadAction<{ id: string }>
+) => {
+  const { id } = action.payload;
+  if (state.apiOptions[id]) {
+    state.apiOptions[id] = {
+      ...state.apiOptions[id],
+      isLoaded: true,
+      isFetching: false,
+      dateLastLoaded: new Date().toISOString(),
+    };
+  }
+};
+
+export default {
+  set{{pascalCase name}},
+  add{{pascalCase name}},
+  update{{pascalCase name}},
+  remove{{pascalCase name}},
+  startLoading,
+  failLoading,
+  successLoading,
+};

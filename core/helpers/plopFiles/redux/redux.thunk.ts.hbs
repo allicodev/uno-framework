@@ -1,1 +1,34 @@
-// Redux thunk template for {{pascalCase name}}
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { set{{pascalCase name}}, startLoading, successLoading, failLoading } from "./{{camelCase name}}.slice";
+import { RootState } from "..";
+
+// Example async thunk for fetching {{camelCase name}}
+export const fetch{{pascalCase name}} = createAsyncThunk<
+  any, // Replace with actual return type
+  { id: string },
+  { state: RootState }
+>(
+  "{{camelCase name}}/fetch{{pascalCase name}}",
+  async ({ id }, { dispatch }) => {
+    try {
+      dispatch(startLoading({ id }));
+
+      // TODO: Replace with actual API call
+      const response = await Promise.resolve({ data: [], id });
+
+
+      dispatch(set{{pascalCase name}}({ data: response.data, id }));
+      dispatch(successLoading({ id }));
+      
+      return response.data;
+    } catch (error) {
+      dispatch(failLoading({ id }));
+      throw error;
+    }
+  }
+);
+
+export default {
+  fetch{{pascalCase name}},
+};
+

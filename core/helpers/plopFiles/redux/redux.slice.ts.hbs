@@ -1,1 +1,30 @@
-// Redux slice template for {{pascalCase name}}
+import { createSlice } from "@reduxjs/toolkit";
+import { {{pascalCase name}}State } from "../types/{{camelCase name}}.types";
+import { withDynamicOptions } from "../redux.helper";
+import {{camelCase name}}Reducers from "./{{camelCase name}}.reducers";
+
+const initialState: {{pascalCase name}}State = {
+  data: [],
+  apiOptions: {},
+};
+
+const {{camelCase name}}Slice = createSlice({
+  name: "{{camelCase name}}",
+  initialState,
+  reducers: {{camelCase name}}Reducers,
+});
+
+// Export actions
+export const {
+  set{{pascalCase name}},
+  add{{pascalCase name}},
+  update{{pascalCase name}},
+  remove{{pascalCase name}},
+  startLoading,
+  successLoading,
+  failLoading,
+} = {{camelCase name}}Slice.actions;
+
+// Export the enhanced reducer with dynamic options
+export default withDynamicOptions({{camelCase name}}Slice.reducer, "{{camelCase name}}");
+
