@@ -17,7 +17,7 @@ module.exports = function (plop) {
       {
         type: "confirm",
         name: "generateThunk",
-        message: "Generate a thunk module?",
+        message: "Generate a redux store?",
         default: false,
       },
     ],
@@ -61,7 +61,22 @@ module.exports = function (plop) {
               ? `core/redux/types/{{camelCase name}}.types.ts`
               : `core/redux/{{camelCase name}}/${f.name}`,
             templateFile: `core/helpers/plopFiles/redux/${f.template}`,
-          }))
+          })),
+          {
+            type: "modify",
+            path: "core/redux/store.ts",
+            pattern: /(import .*;)([\s\S]*?)(const store = configureStore)/,
+            template: [
+              '$1\nimport {{camelCase name}} from "./{{camelCase name}}/{{camelCase name}}.slice";',
+              "$2$3",
+            ].join("\n"),
+          },
+          {
+            type: "modify",
+            path: "core/redux/store.ts",
+            pattern: /(reducer:\s*{)([\s\S]*?)(\n\s*},)/,
+            template: "$1$2\n    {{camelCase name}},$3",
+          }
         );
       }
       return actions;

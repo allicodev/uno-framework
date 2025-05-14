@@ -1,30 +1,62 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { set{{pascalCase name}}, startLoading, successLoading, failLoading } from "./{{camelCase name}}.slice";
 import { RootState } from "..";
+import { shouldFetch } from "../redux.helper";
 
-// Example async thunk for fetching {{camelCase name}}
-export const fetch{{pascalCase name}} = createAsyncThunk<
-  any, // Replace with actual return type
-  { id: string },
-  { state: RootState }
->(
-  "{{camelCase name}}/fetch{{pascalCase name}}",
-  async ({ id }, { dispatch }) => {
-    try {
-      dispatch(startLoading({ id }));
+const reduxKey = "{{camelCase name}}";
 
-      // TODO: Replace with actual API call
-      const response = await Promise.resolve({ data: [], id });
+interface Fetch{{pascalCase name}}Params {
+  page?: number;
+  limit?: number;
+  forceFetch?: boolean;
+  callback?: Function | boolean | null;
+}
 
+export const fetch{{pascalCase name}} = createAsyncThunk(
+  `${reduxKey}/fetch{{pascalCase name}}`,
+  async (params: Fetch{{pascalCase name}}Params, thunkApi) => {
+    const {
+      page = 1,
+      limit = 10,
+      forceFetch = false,
+      callback = false,
+    } = params ?? {};
 
-      dispatch(set{{pascalCase name}}({ data: response.data, id }));
-      dispatch(successLoading({ id }));
-      
-      return response.data;
-    } catch (error) {
-      dispatch(failLoading({ id }));
-      throw error;
+    const { dispatch, getState, requestId } = thunkApi ?? {};
+    const id = requestId;
+
+    const resourceParams = {
+      id,
+      state: getState() as RootState,
+      dispatch,
+      reduxKey,
+      forceFetch,
+    };
+
+    if (shouldFetch(resourceParams)) {
+      try {
+        dispatch(startLoading({ id }));
+
+        // TODO: Replace with actual API call
+        const response = await Promise.resolve({ data: [], id });
+
+        dispatch(set{{pascalCase name}}({ data: response.data, id }));
+        dispatch(successLoading({ id }));
+
+        typeof callback == "function" && callback(true, response.data);
+        
+        return response.data;
+      } catch (error) {
+        dispatch(failLoading({ id }));
+
+        typeof callback == "function" &&
+          callback(false, error || "Failed to fetch {{pascalCase name}}");
+
+        throw error;
+      }
     }
+
+   
   }
 );
 

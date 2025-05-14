@@ -1,28 +1,27 @@
-import { useState, useEffect } from 'react';
-import { {{pascalCase name}}Props, {{pascalCase name}}State, {{pascalCase name}}Handlers } from './{{camelCase name}}.types';
+import { useEffect } from 'react';
+import { {{pascalCase name}}Props, {{pascalCase name}}Handlers } from './{{camelCase name}}.types';
+import { RootState, useDispatch, useSelector } from "@/core/redux";
+import {{pascalCase name}}Thunk from "@/core/redux/{{camelCase name}}";
 
 export const use{{pascalCase name}} = (props: {{pascalCase name}}Props) => {
-  // Initialize state
-  const [state, setState] = useState<{{pascalCase name}}State>({
-    // Add your state properties here
-    isLoading: false,
-  });
+  const dispatch = useDispatch();
 
-  // Define handlers
-  const handlers: {{pascalCase name}}Handlers = {
-    // Add your handlers here
-    handleSomething: () => {
-      // Implementation
-    },
-  };
+   const {{lowerCase name}} = useSelector((state: RootState) => state.{{camelCase name}}.data);
 
-  // Side effects
+  // Define handlers if necessary
+  const handlers: {{pascalCase name}}Handlers = {};
+
   useEffect(() => {
     // Add your side effects here
+    dispatch(
+      {{pascalCase name}}Thunk.fetch{{pascalCase name}}({
+        page: 1,
+        limit: 10,
+      })
+    );
   }, []);
 
   return {
-    state,
     handlers,
   };
 };
