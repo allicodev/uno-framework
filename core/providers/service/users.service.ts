@@ -1,6 +1,5 @@
 import API from "./api.service";
 import { ExtendedResponse, User } from "@/core/types";
-import { isAuthenticated } from "@/core/utils/token.utils";
 abstract class UsersService {
   private static readonly BASE_ENDPOINT = "/users";
 

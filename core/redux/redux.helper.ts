@@ -20,20 +20,29 @@ const shouldFetch = (params: Params): boolean => {
   const { state, dispatch, id, reduxKey, ttl = 300 } = params;
   const resources = _.cloneDeep(state[reduxKey] || {});
 
-  const checkOptions = (resources?.apiOptions ?? {})[id] ?? null;
-
-  // also add another layer to only fetch if only the last request is not pending, to resolve multiple request due to different request ID
-  let optionIndex = Object.keys(resources?.apiOptions ?? {}).indexOf(id);
-  if (optionIndex > 0 || optionIndex == -1) {
-    if (optionIndex == -1)
-      optionIndex = Object.keys(resources?.apiOptions ?? {}).length - 1;
-
-    const lastOptionKey = Object.keys(resources.apiOptions)[optionIndex];
-    if (lastOptionKey) {
-      const lastCheckOption = (resources?.apiOptions ?? {})[lastOptionKey];
-      return !lastCheckOption.isFetching && lastCheckOption.isLoaded;
+  // Check if last requests in the apiOptions is pending
+  if (!_.isEmpty(resources?.apiOptions)) {
+    const apiOptionKeys = Object.keys(resources.apiOptions);
+    if (apiOptionKeys.length > 0) {
+      const lastKey = _.last(apiOptionKeys);
+      const lastOption = resources.apiOptions[lastKey];
+      if (lastOption?.isFetching) return false;
     }
   }
+
+  // let optionIndex = Object.keys(resources?.apiOptions ?? {}).indexOf(id);
+  // if (optionIndex > 0 || optionIndex == -1) {
+  //   if (optionIndex == -1)
+  //     optionIndex = Object.keys(resources?.apiOptions ?? {}).length - 1;
+
+  //   const lastOptionKey = Object.keys(resources.apiOptions)[optionIndex];
+  //   if (lastOptionKey) {
+  //     const lastCheckOption = (resources?.apiOptions ?? {})[lastOptionKey];
+  //     return !lastCheckOption.isFetching && lastCheckOption.isLoaded;
+  //   }
+  // }
+
+  const checkOptions = (resources?.apiOptions ?? {})[id] ?? null;
 
   if (!_.isNil(checkOptions)) {
     const { isFetching, isLoaded, ttl, dateLastLoaded } =

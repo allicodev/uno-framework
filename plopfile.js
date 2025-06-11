@@ -1,17 +1,20 @@
 module.exports = function (plop) {
-  // Component generator
-  plop.setGenerator("page", {
-    description: "Create a new page component",
+  console.log("\n🚀 Welcome to Uno Framework! 🚀");
+  console.log("The modern framework for building scalable applications ✨\n");
+
+  // Module generator (empty for now)
+  plop.setGenerator("module", {
+    description: "Create a new module",
     prompts: [
       {
         type: "input",
         name: "name",
-        message: "What is the name of the page component?",
+        message: "What is the name of the module?",
         validate: function (value) {
           if (/.+/.test(value)) {
             return true;
           }
-          return "Page name is required";
+          return "Module name is required";
         },
       },
       {
@@ -48,7 +51,7 @@ module.exports = function (plop) {
       const actions = [
         ...frontendFiles.map((f) => ({
           type: "add",
-          path: `src/pages/{{lowerCase name}}/${f.name}`,
+          path: `core/modules/{{lowerCase name}}/${f.name}`,
           templateFile: `core/helpers/plopFiles/frontend/${f.template}`,
         })),
       ];
@@ -81,5 +84,24 @@ module.exports = function (plop) {
       }
       return actions;
     },
+  });
+
+  // Page generator
+  plop.setGenerator("page", {
+    description: "Create a new page component",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+        message: "What is the name of the Page?",
+        validate: function (value) {
+          if (/.+/.test(value)) {
+            return true;
+          }
+          return "Page name is required";
+        },
+      },
+    ],
+    actions: [],
   });
 };

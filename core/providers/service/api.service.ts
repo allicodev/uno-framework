@@ -3,7 +3,6 @@ import _ from "lodash";
 
 import { ExtendedResponse, ApiGetProps, ApiPostProps } from "@/core/types";
 import ApiConfig from "@/config/api.config";
-import { getToken } from "@/core/utils/token.utils";
 
 abstract class API {
   public static async get<T>({
@@ -13,7 +12,7 @@ abstract class API {
     publicRoute = false,
   }: ApiGetProps): Promise<ExtendedResponse<T>> {
     // Use provided token or get from localStorage
-    const authToken = token || getToken();
+    const authToken = token || "no-token";
 
     // // ! temporary commented
     // if (!publicRoute && !authToken)
