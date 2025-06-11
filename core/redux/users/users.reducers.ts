@@ -7,6 +7,8 @@ import { UsersState, User } from "../types/users.types";
 export const setUsers = (state: UsersState, action: PayloadAction<any>) => {
   const { data, id } = action.payload ?? {};
   state.data = data;
+
+  // updating api options from the return "meta" on api request
   state.apiOptions[id] = {
     ...(state.apiOptions[id] || {}),
     ..._.omit(action.payload, ["id", "data"]),

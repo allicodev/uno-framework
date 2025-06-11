@@ -4,10 +4,10 @@ import { setUsers, failLoading } from "./users.slice";
 import { shouldFetch } from "../redux.helper";
 import { RootState } from "..";
 
-
 const reduxKey = "users";
 
 interface FetchUserParams {
+  id?: string;
   page?: number;
   limit?: number;
   forceFetch?: boolean;
@@ -19,14 +19,15 @@ const fetchUsers = createAsyncThunk(
   `${reduxKey}/fetchUsers`,
   async (params: FetchUserParams, thunkApi) => {
     const {
+      id: paramsId,
       page = 1,
-      limit = 10,
+      limit = 99999999,
       forceFetch = false,
       callback = false,
     } = params ?? {};
 
     const { dispatch, getState, requestId } = thunkApi ?? {};
-    const id = requestId;
+    const id = paramsId ?? requestId;
 
     const resourceParams = {
       id,

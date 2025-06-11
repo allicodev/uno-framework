@@ -1,0 +1,15 @@
+import mongoose, { Schema, Document } from 'mongoose';
+
+export interface I{{modelName}} extends Document {
+{{#each fields}}
+  {{name}}: {{#if (eq type 'String')}}string{{else if (eq type 'Number')}}number{{else if (eq type 'Date')}}Date{{else}}object{{/if}};
+{{/each}}
+}
+
+const {{modelName}}Schema = new Schema<I{{modelName}}>({
+{{#each fields}}
+  {{name}}: { type: {{type}}, required: true },
+{{/each}}
+});
+
+export default mongoose.model<I{{modelName}}>('{{modelName}}', {{modelName}}Schema);

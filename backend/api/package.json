@@ -1,0 +1,19 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "generate": "plop"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "plop": "^4.0.1"
+  },
+  "dependencies": {
+    "inquirer": "^12.6.1",
+    "mongoose": "^8.15.0"
+  }
+}
