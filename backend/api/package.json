@@ -11,9 +11,5 @@
   "description": "",
   "devDependencies": {
     "plop": "^4.0.1"
-  },
-  "dependencies": {
-    "inquirer": "^12.6.1",
-    "mongoose": "^8.15.0"
   }
 }

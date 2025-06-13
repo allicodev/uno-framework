@@ -54,7 +54,7 @@ abstract class API {
     publicRoute = false,
   }: ApiPostProps): Promise<ExtendedResponse<T>> {
     // Use provided token or get from localStorage
-    const authToken = token || getToken();
+    const authToken = token || "no-token";
 
     if (!publicRoute && !authToken)
       return {
